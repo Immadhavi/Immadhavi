@@ -1,12 +1,93 @@
-- 👋 Hi, I’m @Immadhavi
-- 👀 I’m interested in ...
-- 🌱 I’m currently learning ...
-- 💞️ I’m looking to collaborate on ...
-- 📫 How to reach me ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
 
-<!---
-Immadhavi/Immadhavi is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-You can click the Preview link to take a look at your changes.
---->
+public class RockPaperScissorsGame {
+
+    private static final String[] OPTIONS = {"Rock", "Paper", "Scissors"};
+    private JFrame frame;
+    private JTextArea textArea;
+    private JButton rockButton, paperButton, scissorsButton, quitButton;
+
+    public RockPaperScissorsGame() {
+        frame = new JFrame("Rock, Paper, Scissors");
+        textArea = new JTextArea(10, 30);
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+
+        JPanel panel = new JPanel();
+        rockButton = new JButton("Rock");
+        paperButton = new JButton("Paper");
+        scissorsButton = new JButton("Scissors");
+        quitButton = new JButton("Quit");
+
+        panel.add(rockButton);
+        panel.add(paperButton);
+        panel.add(scissorsButton);
+        panel.add(quitButton);
+
+        frame.setLayout(new BorderLayout());
+        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.add(panel, BorderLayout.SOUTH);
+
+        rockButton.addActionListener(new ButtonClickListener());
+        paperButton.addActionListener(new ButtonClickListener());
+        scissorsButton.addActionListener(new ButtonClickListener());
+        quitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+    private class ButtonClickListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String userChoice = ((JButton) e.getSource()).getText();
+            String computerChoice = getComputerChoice();
+            String result = determineWinner(userChoice, computerChoice);
+
+            textArea.append("User chose: " + userChoice + "\n");
+            textArea.append("Computer chose: " + computerChoice + "\n");
+            textArea.append(result + "\n\n");
+        }
+    }
+
+    private String getComputerChoice() {
+        Random random = new Random();
+        return OPTIONS[random.nextInt(OPTIONS.length)];
+    }
+
+    private String determineWinner(String userChoice, String computerChoice) {
+        if (userChoice.equals(computerChoice)) {
+            return "It's a tie!";
+        }
+
+        switch (userChoice) {
+            case "Rock":
+                return computerChoice.equals("Scissors") ? "You win!" : "You lose!";
+            case "Paper":
+                return computerChoice.equals("Rock") ? "You win!" : "You lose!";
+            case "Scissors":
+                return computerChoice.equals("Paper") ? "You win!" : "You lose!";
+            default:
+                return "Invalid choice!";
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(RockPaperScissorsGame::new);
+    }
+}
+
+
+
